@@ -28,7 +28,7 @@
   # };
 
 
-  time.timeZone = "US/Central";
+  time.timeZone = "America/Los_Angeles";
   networking.hostName = "matebook";
 
   hardware.bluetooth.enable = true;
@@ -41,14 +41,28 @@
   services.logind.lidSwitch = "suspend";
 
   services.xserver = {
-    synaptics = {
-      enable = true;
-      palmDetect = true;
-      twoFingerScroll = true;
-      minSpeed = "1.0";
-      maxSpeed = "2.0";
-    };
+    displayManager.sddm.enable = true;
+    desktopManager.plasma5.enable = true;
+    # synaptics = {
+    #   enable = true;
+    #   palmDetect = true;
+    #   twoFingerScroll = true;
+    #   minSpeed = "1.0";
+    #   maxSpeed = "2.0";
+    # };
     videoDrivers = [ "intel" ];
+    dpi = 227;
+  };
+
+  # environment.variables = {
+  #   GDK_SCALE = pkgs.lib.mkDefault "2";
+  #   GDK_DPI_SCALE= pkgs.lib.mkDefault "0.5";
+  # };
+
+  environment.variables = {
+    GDK_SCALE = "2";
+    GDK_DPI_SCALE = "0.5";
+    QT_AUTO_SCREEN_SCALE_FACTOR = "1";
   };
 
   #hardware.nvidia.optimus_prime.enable = true;

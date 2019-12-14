@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 {
-  users.defaultUserShell = pkgs.zsh;
+  # users.defaultUserShell = pkgs.zsh;
   users.extraUsers.david = {
     uid = 1000;
     isNormalUser = true;
@@ -13,7 +13,7 @@
     ];
     createHome = true;
     home = "/home/david";
-    useDefaultShell = true;
+    # useDefaultShell = true;
     openssh.authorizedKeys.keys = [
     ];
   };
