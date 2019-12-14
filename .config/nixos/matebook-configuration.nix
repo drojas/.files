@@ -9,8 +9,8 @@
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.supportedFilesystems = [ "zfs" ];
-  boot.zfs.enableUnstable = true;
+  boot.supportedFilesystems = [ "ext4" ];
+  # boot.zfs.enableUnstable = true;
 
   networking.networkmanager.enable = true;
   networking.hostId = "664d4279";
@@ -21,11 +21,11 @@
   #  externalInterface = "wlp60s0";
   #};
 
-  services.zfs.autoSnapshot = {
-    enable = true;
-    frequent = 16; # keep the latest eight 15-minute snapshots (instead of four)
-    monthly = 12;  # keep only one monthly snapshot (instead of twelve)
-  };
+  # services.zfs.autoSnapshot = {
+  #  enable = true;
+  #  frequent = 16; # keep the latest eight 15-minute snapshots (instead of four)
+  #  monthly = 12;  # keep only one monthly snapshot (instead of twelve)
+  # };
 
 
   time.timeZone = "US/Central";

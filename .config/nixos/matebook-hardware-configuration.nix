@@ -13,26 +13,16 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-label/nixos";
+    { device = "/dev/nvme0n1p1";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-label/boot";
+    { device = "/dev/nvme0n1p3";
       fsType = "vfat";
     };
 
-  # fileSystems."/home" =
-  #   { device = "/dev/disk/by-label/home";
-  #     fsType = "ext4";
-  #   };
-
-  fileSystems."/tmp" =
-    { device = "mypool/tmp";
-      fsType = "zfs";
-    };
-
-  swapDevices = [ { device = "/dev/by-label/swap"; } ];
+  swapDevices = [ { device = "/dev/nvme0n1p2"; } ];
 
   nix.maxJobs = lib.mkDefault 8;
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
