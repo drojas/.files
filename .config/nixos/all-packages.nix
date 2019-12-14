@@ -12,14 +12,14 @@
     firewall.allowedUDPPorts = [ 137 138 ];
     #firewall.allowedUDPPorts = [ 137 138 config.networking.wireguard.interfaces.wg0.listenPort ];
     hosts = {
-      "172.31.98.1" = [ "aruba.odyssys.net" ];
+      # "172.31.98.1" = [ "aruba.odyssys.net" ];
     };
   };
 
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowBroken = true;
   nix = {
-      trustedUsers = [ "root" "ditadi" ];
+      trustedUsers = [ "root" "david" ];
   };
 
 
@@ -57,7 +57,7 @@
       vistafonts
       terminus_font
       latinmodern-math
-      hack-font
+      # hack-font
     ];
   };
 

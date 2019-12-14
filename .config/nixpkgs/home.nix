@@ -1,11 +1,6 @@
 { config, pkgs, ... }:
 let
   lockCmd = "xlock -mode blank -erasedelay 0";
-  batch-explorer = pkgs.callPackage ./batch-explorer.nix { };
-  #sqlpackage = pkgs.callPackage ./sqlpackage.nix { };
-  #msbuild = pkgs.callPackage ./msbuild.nix { };
-  #nuget = pkgs.callPackage ./nuget.nix { };
-  #fsharp10 = import ./fsharp.nix { pkgs = pkgs; msbuild = msbuild; fetchNuGet = nuget; };
 
 in rec {
 
@@ -15,8 +10,8 @@ in rec {
   nixpkgs.config.allowUnfree = true;
 
 
-  home.username = "ditadi";
-  home.homeDirectory = "/home/ditadi";
+  home.username = "david";
+  home.homeDirectory = "/home/david";
 
   home.packages = with pkgs; [
     htop
@@ -44,7 +39,6 @@ in rec {
     inotify-tools
     fzy
     ripgrep
-    batch-explorer
     #sqlpackage
     #fsharp10
     #msbuild
@@ -52,7 +46,6 @@ in rec {
 
 
   programs = {
-    neovim.enable = true;
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
     firefox.enable = true;
@@ -61,10 +54,10 @@ in rec {
     direnv.enableZshIntegration = true;
     fzf.enable = true;
 
-    tmux = {
-      enable = true;
-      tmuxinator.enable = true;
-    };
+    # tmux = {
+    #   enable = true;
+    #   tmuxinator.enable = true;
+    # };
     browserpass = {
       enable = true;
       browsers = [ "firefox" ];
@@ -81,7 +74,7 @@ in rec {
       shellAliases = {
         ".." = "cd ..";
         "ll" = "ls -l";
-        "mux" = "tmuxinator";
+        # "mux" = "tmuxinator";
         "dot" = "git --git-dir=$HOME/.files/ --work-tree=$HOME";
         "r" = "ranger";
         # diff two files in a terminal
@@ -275,13 +268,13 @@ in rec {
 
     redshift = {
       enable = true;
-      latitude = "29.8";
-      longitude = "-95.4";
+      latitude = "37.8";
+      longitude = "122.4";
     };
   };
 
-  home.file = {
-    ".tmux.conf".source = ../tmux/tmux.conf;
-    ".tmuxinator".source = ../tmuxinator;
-  };
+  # home.file = {
+    # ".tmux.conf".source = ../tmux/tmux.conf;
+    # ".tmuxinator".source = ../tmuxinator;
+  # };
 }

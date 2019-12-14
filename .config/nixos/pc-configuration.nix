@@ -58,7 +58,7 @@
 
   virtualisation.docker.enable = true;
   #virtualisation.virtualbox.host.enable = true;
-  #users.extraGroups.vboxusers.members = [ "ditadi" ];
+  #users.extraGroups.vboxusers.members = [ "david" ];
 
   environment.systemPackages = with pkgs; [
     ntfs3g

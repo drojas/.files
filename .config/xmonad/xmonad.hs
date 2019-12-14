@@ -56,9 +56,8 @@ main = do
     modifiers = avoidStruts . smartBorders
     myStartupHook = spawn "@albert@"
     myScratchPads =
-        [NS "dot" "kitty tmuxinator dot"   (title =? "dot") defaultFloating
-        ,NS "work" "kitty tmuxinator work" (title =? "work") defaultFloating
-        ,NS "ranger" "kitty ranger"        (title =? "ranger") defaultFloating
+        [
+        NS "ranger" "kitty ranger"        (title =? "ranger") defaultFloating
         ]
     mykeys (XConfig {modMask = modm}) = M.fromList $
         [((modm .|. shiftMask, xK_Return), spawnHere =<< asks (terminal . config))

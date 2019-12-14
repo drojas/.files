@@ -15,27 +15,6 @@
   networking.networkmanager.enable = true;
   networking.hostId = "664d4279";
 
- # networking.wireguard.interfaces = {
- #   wg0 = {
- #     ips = [ "10.13.13.104/32" ];
-
- #     privateKey = "+IJRGez3DFq1wXnVZcUpqaTTEnvXcSl37DzYgegQ9Wc=";
- #     listenPort = 56650;
-
- #     peers = [
- #       #{
- #       #  publicKey = "bcPctKwpG9Wp0SE1I5jxoXdUjd1Kct+58VzsagJdjyg=";
- #       #  ##publicKey = "9UqfnyzSY7cTA8PVDLGOnWJRQ7giHw8/qKQlN7YZnCg=";
-
- #       #  allowedIPs = [ "10.13.13.100/24" ];
-
- #       #  endpoint = "40.124.55.226:51820";
- #       #  persistentKeepalive = 25;
- #       #}
- #     ];
- #   };
- # };
-
   #networking.nat = {
   #  enable = true;
   #  internalInterfaces = [ "wg0" ];
