@@ -1,5 +1,7 @@
 { config, pkgs, ... }:
 
+with import <nixpkgs> {};
+
 {
   programs.home-manager.enable = true;
 
@@ -15,16 +17,16 @@
       window = {
         padding.x = 10;
         padding.y = 10;
-        decorations = "buttonless";
+        decorations = "none";
       };
 
       font = {
         size = 12.0;
         use_thin_strokes = true;
 
-        normal.family = "FuraCode Nerd Font";
-        bold.family = "FuraCode Nerd Font";
-        italic.family = "FuraCode Nerd Font";
+        # normal.family = "FuraCode Nerd Font";
+        # bold.family = "FuraCode Nerd Font";
+        # italic.family = "FuraCode Nerd Font";
       };
 
       cursor.style = "Beam";
@@ -99,15 +101,20 @@
     userEmail = "drojascamaggi@gmail.com";
   };
 
-  home.file = {
-    ".emacs.d" = {
-      source = fetchFromGitHub {
-        owner = "syl20bnr";
-        repo = "spacemacs";
-        rev = "3f559a4233815c6129f9ad593d5dee9fff199a1c";
-        sha256 = "1x0s5xlwhajgnlnb9mk0mnabhvhsf97xk05x79rdcxwmf041h3fd";
+  home = {
+    file = {
+      ".emacs.d" = {
+        source = fetchFromGitHub {
+          owner = "syl20bnr";
+          repo = "spacemacs";
+          rev = "3f559a4233815c6129f9ad593d5dee9fff199a1c";
+          sha256 = "1x0s5xlwhajgnlnb9mk0mnabhvhsf97xk05x79rdcxwmf041h3fd";
+        };
+        recursive = true;
       };
-      recursive = true;
     };
+    packages = [
+      pkgs.neofetch
+    ];
   };
-};
+}
