@@ -1,64 +1,11 @@
 { config, pkgs, ... }:
 
-with import <nixpkgs> {};
-
 {
   imports =
     [ ./matebook-hardware-configuration.nix
       ./all-packages.nix
       ./all-users.nix
-      "${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
     ];
-
-  home-manager.users.david = {
-    home.file = {
-      ".emacs.d" = {
-        source = fetchFromGitHub {
-          owner = "syl20bnr";
-          repo = "spacemacs";
-          rev = "3f559a4233815c6129f9ad593d5dee9fff199a1c";
-          sha256 = "1x0s5xlwhajgnlnb9mk0mnabhvhsf97xk05x79rdcxwmf041h3fd";
-        };
-        recursive = true;
-      };
-    };
-
-    # home.packages = [
-      # pkgs.emacs
-    # ];
-
-    programs.fish = {
-      enable = true;
-      shellAliases = {
-        "dot" = "git --git-dir=$HOME/.files/ --work-tree=$HOME";
-      };
-    };
-
-    programs.emacs = {
-      enable = true;
-    };
-
-    programs.firefox = {
-      enable = true;
-      enableIcedTea = true;
-    };
-
-    services.gpg-agent = {
-      enable = true;
-      defaultCacheTtl = 1800;
-      enableSshSupport = true;
-    };
-
-    programs.home-manager = {
-      enable = true;
-    };
-
-    programs.git = {
-      enable = true;
-      userName = "David Rojas Camaggi";
-      userEmail = "drojascamaggi@gmail.com";
-    };
-  };
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;

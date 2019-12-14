@@ -49,7 +49,7 @@
       corefonts
       inconsolata
       # hasklig
-      # fira-code
+      fira-code
       powerline-fonts
       ttf_bitstream_vera
       dejavu_fonts
