@@ -32,7 +32,7 @@
       fsType = "zfs";
     };
 
-  swapDevices = [ { device = "/dev/by-label/swap" } ];
+  swapDevices = [ { device = "/dev/by-label/swap"; } ];
 
   nix.maxJobs = lib.mkDefault 8;
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
