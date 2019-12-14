@@ -2,6 +2,7 @@
 {
   # users.defaultUserShell = pkgs.zsh;
   users.extraUsers.david = {
+    shell = pkgs.fish;
     uid = 1000;
     isNormalUser = true;
     name = "david";

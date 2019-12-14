@@ -48,15 +48,15 @@
     fonts = with pkgs; [
       corefonts
       inconsolata
-      hasklig
-      fira-code
+      # hasklig
+      # fira-code
       powerline-fonts
       ttf_bitstream_vera
       dejavu_fonts
      # nerdfonts
-      vistafonts
+      # vistafonts
       terminus_font
-      latinmodern-math
+      # latinmodern-math
       # hack-font
     ];
   };
@@ -65,9 +65,10 @@
   # zsh completion for system wide packages e.g., systemd
   # environment.pathsToLink = [ "/share/zsh" ];
 
+  environment.pathsToLink = [ "/libexec" ];
+
   environment.systemPackages = with pkgs; [
     blueman
-    emacs
     # (texlive.combine {
     #     inherit (texlive)
     #     #scheme-minimal # plain
