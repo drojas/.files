@@ -7,11 +7,23 @@
       ./all-users.nix
     ];
 
+
+  environment.variables = {
+     GDK_SCALE = "2";
+     GDK_DPI_SCALE = "0.5";
+     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+  };
+
+  environment.systemPackages = with pkgs; [
+    xorg.xbacklight
+    wireguard
+    kitty
+  ];
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.supportedFilesystems = [ "ext4" ];
-  # boot.zfs.enableUnstable = true;
 
   networking.networkmanager.enable = true;
   networking.hostId = "664d4279";
@@ -29,14 +41,30 @@
   services.logind.lidSwitch = "suspend";
 
   services.xserver = {
+    layout = "us";
+
     # displayManager.sddm.enable = true;
     # desktopManager.plasma5.enable = true;
+    
     videoDrivers = [ "intel" ];
-    dpi = 227;
+    dpi = 259; # 170, 227, 259
 
     desktopManager = {
       default = "none";
       xterm.enable = false;
+    };
+
+    windowManager.default = "i3";
+
+    windowManager.i3 = {
+      enable = true;
+      package = pkgs.i3-gaps;
+      extraPackages = with pkgs; [
+        dmenu #application launcher most people use
+        i3status # gives you the default i3 status bar
+        # i3status-rust # this one worked better
+        i3lock #default i3 screen locker
+     ];
     };
 
     synaptics = {
@@ -47,33 +75,12 @@
       maxSpeed = "2.0";
     };
 
-    windowManager.i3 = {
-      enable = true;
-      extraPackages = with pkgs; [
-        dmenu #application launcher most people use
-        i3status # gives you the default i3 status bar
-        i3lock #default i3 screen locker
-        i3blocks #if you are planning on using i3blocks over i3status
-     ];
-    };
-  };
-
-  environment.variables = {
-    GDK_SCALE = "2";
-    GDK_DPI_SCALE = "0.5";
-    QT_AUTO_SCREEN_SCALE_FACTOR = "1";
   };
 
   #hardware.nvidia.optimus_prime.enable = true;
   #hardware.nvidia.optimus_prime.nvidiaBusId = "PCI:1:0:0";
   #hardware.nvidia.optimus_prime.intelBusId = "PCI:0:2:0";
   virtualisation.docker.enable = true;
-
-  environment.systemPackages = with pkgs; [
-    xorg.xbacklight
-    wireguard
-  ];
-
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
