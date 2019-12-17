@@ -18,17 +18,17 @@
 
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowBroken = true;
+
   nix = {
       trustedUsers = [ "root" "david" ];
   };
-
 
   hardware = {
     enableAllFirmware = true;
     opengl.enable = true;
     opengl.driSupport32Bit = true;
     pulseaudio.enable = true;
-    #pulseaudio.extraModules = [ pkgs.pulseaudio-modules-bt ];
+    pulseaudio.extraModules = [ pkgs.pulseaudio-modules-bt ];
     pulseaudio.package = pkgs.pulseaudioFull;
     pulseaudio.support32Bit = true;
   };

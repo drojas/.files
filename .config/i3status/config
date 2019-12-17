@@ -60,7 +60,7 @@ path_exists VPN {
 
 tztime local {
         format = "%Y-%m-%d %H:%M:%S"
-        hide_if_equals_localtime = true
+        # hide_if_equals_localtime = true
 }
 
 tztime berlin {

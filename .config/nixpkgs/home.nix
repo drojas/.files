@@ -5,6 +5,34 @@ with import <nixpkgs> {};
 {
   programs.home-manager.enable = true;
 
+  # https://wiki.archlinux.org/index.php/HiDPI#X_Resources
+  # xresources = {
+  #   properties = {
+  #     "Xcursor.size" = 128;
+  #     "Xft.dpi" = 259; # 276
+  #     "Xft.autohint" = 0;
+  #     "Xft.lcdfilter" = "lcddefault";
+  #     "Xft.hintstyle" = "hintfull";
+  #     "Xft.hinting" = 1;
+  #     "Xft.antialias" = 1;
+  #     "Xft.rgba" = "rgb";
+  #   };
+  #   extraConfig = builtins.readFile(
+  #     pkgs.fetchFromGitHub {
+  #       owner = "dracula";
+  #       repo = "xresources";
+  #       rev = "ca0d05cf2b7e5c37104c6ad1a3f5378b72c705db";
+  #       sha256 = "0lxv37gmh38y9d3l8nbnsm1mskcv10g3i83j0kac0a2qmypv1k9f";
+  #     } + "/Xresources.dark"
+  #   );
+  # };
+
+  xsession.pointerCursor = {
+    package = pkgs.vanilla-dmz;
+    name = "Vanilla-DMZ";
+    size = 64;
+  };
+
   programs.fish = {
     enable = true;
     shellAliases = {
@@ -22,9 +50,11 @@ with import <nixpkgs> {};
     enable = true;
   };
 
-  programs.firefox = {
+  programs.chromium = {
     enable = true;
-    enableIcedTea = true;
+    extensions = [
+      "hdokiejnpimakedhajhdlcegeplioahd" # lastpass
+    ];
   };
 
   programs.git = {
@@ -34,6 +64,12 @@ with import <nixpkgs> {};
   };
 
   home = {
+    sessionVariables = {
+      VISUAL = "emacsclient";
+      EDITOR = "emacsclient";
+      LANG = "en_US.UTF-8";
+      # PATH = "~/.cabal/bin:~/.local/bin:$PATH";
+    };
     activation.linkMyFiles = config.lib.dag.entryAfter ["writeBoundary"] ''
       # source - http://news.ycombinator.com/item?id=11070797
 
@@ -41,6 +77,7 @@ with import <nixpkgs> {};
       git --git-dir=$HOME/.files/ --work-tree=$HOME checkout
       git --git-dir=$HOME/.files/ --work-tree=$HOME config status.showUntrackedFiles no
     '';
+
     file = {
       ".emacs.d" = {
         source = fetchFromGitHub {
@@ -54,25 +91,13 @@ with import <nixpkgs> {};
     };
     packages = [
       pkgs.neofetch
+      pkgs.lastpass-cli
     ];
   };
-
 
   services.gpg-agent = {
     enable = true;
     defaultCacheTtl = 1800;
     enableSshSupport = true;
   };
-
-  # services.compton = {
-  #   enable = true;
-  #   fade = false;
-  #   shadow = true;
-  #   fadeDelta = 4;
-  #   inactiveOpacity = "0.8";
-  #   extraOptions =
-  #     ''
-  #       no-dock-shadow = true;
-  #     '';
-  # };
 }
