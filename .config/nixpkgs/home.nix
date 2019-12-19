@@ -43,6 +43,16 @@ with import <nixpkgs> {};
       if status is-interactive
           neofetch
       end
+
+      # emacs ansi-term support
+      if test -n "$EMACS"
+         set -x TERM eterm-color
+      end
+
+      # this function may be required
+      function fish_title
+         true
+      end
       '';
   };
 
@@ -63,19 +73,41 @@ with import <nixpkgs> {};
     userEmail = "drojascamaggi@gmail.com";
   };
 
+  #
+  # TODO: mkDerivation
+  #
+  # https://nixos.org/nixos/nix-pills/basic-dependencies-and-hooks.html
+  #
+
+  # git.repositories = {
+  #   dotfiles = {
+  #     bin = "dot";
+  #     flags = {
+  #       work-dir = "$HOME";
+  #       git-dir = "$HOME/.files";
+  #     };
+  #     config = {
+  #       status.showUntrackedFiles = false;
+  #       core.bare = true;
+  #       remote = {
+  #         origin = "git@github.com:drojas/.files.git";
+  #       };
+  #     };
+  #   };
+  # };
+
   home = {
     sessionVariables = {
       VISUAL = "emacsclient";
       EDITOR = "emacsclient";
       LANG = "en_US.UTF-8";
-      # PATH = "~/.cabal/bin:~/.local/bin:$PATH";
     };
     activation.linkMyFiles = config.lib.dag.entryAfter ["writeBoundary"] ''
       # source - http://news.ycombinator.com/item?id=11070797
 
-      git --git-dir=$HOME/.files/ --work-tree=$HOME status || git clone --bare git@github.com:drojas/.files.git $HOME/.files
-      git --git-dir=$HOME/.files/ --work-tree=$HOME checkout
-      git --git-dir=$HOME/.files/ --work-tree=$HOME config status.showUntrackedFiles no
+      git --git-dir=$HOME/.files/ --work-tree=$HOME status || $DRY_RUN_CMD git clone --bare git@github.com:drojas/.files.git $HOME/.files
+      $DRY_RUN_CMD git --git-dir=$HOME/.files/ --work-tree=$HOME checkout
+      $DRY_RUN_CMD git --git-dir=$HOME/.files/ --work-tree=$HOME config status.showUntrackedFiles no
     '';
 
     file = {

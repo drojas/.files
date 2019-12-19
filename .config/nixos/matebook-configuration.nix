@@ -29,7 +29,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.supportedFilesystems = [ "ext4" ];
 
-  fonts.fontconfig.dpi = 227;
+  fonts.fontconfig.dpi = 170;
   i18n.consoleFont = "ter-i32b";
   i18n.consolePackages = with pkgs; [ terminus_font ];
   boot.earlyVconsoleSetup = true;
@@ -59,7 +59,7 @@
     # desktopManager.plasma5.enable = true;
 
     videoDrivers = [ "intel" ];
-    dpi = 227; # 170, 227, 259, 276
+    dpi = 170; # 170, 227, 259, 276
 
     desktopManager = {
       default = "none";
@@ -96,7 +96,6 @@
       minSpeed = "1.0";
       maxSpeed = "2.0";
     };
-
   };
 
   #hardware.nvidia.optimus_prime.enable = true;
@@ -109,5 +108,4 @@
   # should.
 
   system.stateVersion = "18.09"; # Did you read the comment?
-
 }
