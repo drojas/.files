@@ -3,6 +3,7 @@
 with import <nixpkgs> {};
 
 {
+  imports = [ ./projects.nix ];
   programs.home-manager.enable = true;
 
   # https://wiki.archlinux.org/index.php/HiDPI#X_Resources
@@ -79,22 +80,21 @@ with import <nixpkgs> {};
   # https://nixos.org/nixos/nix-pills/basic-dependencies-and-hooks.html
   #
 
-  # git.repositories = {
-  #   dotfiles = {
-  #     bin = "dot";
-  #     flags = {
-  #       work-dir = "$HOME";
-  #       git-dir = "$HOME/.files";
-  #     };
-  #     config = {
-  #       status.showUntrackedFiles = false;
-  #       core.bare = true;
-  #       remote = {
-  #         origin = "git@github.com:drojas/.files.git";
-  #       };
-  #     };
-  #   };
-  # };
+
+  projects.enable = true;
+
+  projects.git = {
+    dotfiles = {
+      remote = "git@github.com:drojas/.files.git";
+      workTree = "$HOME";
+      gitDir = ".files";
+      cloneFlags = "--bare";
+      extraConfig = ''
+          status.showUntrackedFiles no
+        '';
+      as = "dot";
+    };
+  };
 
   home = {
     sessionVariables = {
@@ -102,13 +102,6 @@ with import <nixpkgs> {};
       EDITOR = "emacsclient";
       LANG = "en_US.UTF-8";
     };
-    activation.linkMyFiles = config.lib.dag.entryAfter ["writeBoundary"] ''
-      # source - http://news.ycombinator.com/item?id=11070797
-
-      git --git-dir=$HOME/.files/ --work-tree=$HOME status || $DRY_RUN_CMD git clone --bare git@github.com:drojas/.files.git $HOME/.files
-      $DRY_RUN_CMD git --git-dir=$HOME/.files/ --work-tree=$HOME checkout
-      $DRY_RUN_CMD git --git-dir=$HOME/.files/ --work-tree=$HOME config status.showUntrackedFiles no
-    '';
 
     file = {
       ".emacs.d" = {
