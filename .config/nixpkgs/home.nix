@@ -80,11 +80,11 @@ with import <nixpkgs> {};
   # https://nixos.org/nixos/nix-pills/basic-dependencies-and-hooks.html
   #
 
-  services.key-manager.enable = false;
+  services.key-manager.enable = true;
   services.key-manager.github = {
     username = "drojas";
     ssh = {
-      matebook = "$HOME/.ssh/id_rsa";
+      matebook = "$HOME/.ssh/id_rsa.pub";
     };
   };
 
