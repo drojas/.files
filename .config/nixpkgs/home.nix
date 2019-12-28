@@ -3,7 +3,7 @@
 with import <nixpkgs> {};
 
 {
-  imports = [ ./projects.nix ];
+  imports = [ ./key-manager.nix ./source-manager.nix ];
   programs.home-manager.enable = true;
 
   # https://wiki.archlinux.org/index.php/HiDPI#X_Resources
@@ -80,19 +80,29 @@ with import <nixpkgs> {};
   # https://nixos.org/nixos/nix-pills/basic-dependencies-and-hooks.html
   #
 
+  services.key-manager.enable = false;
+  services.key-manager.github = {
+    username = "drojas";
+    ssh = {
+      matebook = "$HOME/.ssh/id_rsa";
+    };
+  };
 
-  projects.enable = true;
-
-  projects.git = {
+  services.source-manager.enable = true;
+  services.source-manager.git = {
     dotfiles = {
       remote = "git@github.com:drojas/.files.git";
       workTree = "$HOME";
-      gitDir = ".files";
+      gitDir = ".files/";
       cloneFlags = "--bare";
       extraConfig = ''
           status.showUntrackedFiles no
         '';
       as = "dot";
+    };
+    morphic = {
+      remote = "git@github.com:drojas/morphic.git";
+      workTree = "$HOME/Code/morphic";
     };
   };
 
