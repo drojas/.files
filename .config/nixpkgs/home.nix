@@ -6,28 +6,6 @@ with import <nixpkgs> {};
   imports = [ ./key-manager.nix ./source-manager.nix ];
   programs.home-manager.enable = true;
 
-  # https://wiki.archlinux.org/index.php/HiDPI#X_Resources
-  # xresources = {
-  #   properties = {
-  #     "Xcursor.size" = 128;
-  #     "Xft.dpi" = 259; # 276
-  #     "Xft.autohint" = 0;
-  #     "Xft.lcdfilter" = "lcddefault";
-  #     "Xft.hintstyle" = "hintfull";
-  #     "Xft.hinting" = 1;
-  #     "Xft.antialias" = 1;
-  #     "Xft.rgba" = "rgb";
-  #   };
-  #   extraConfig = builtins.readFile(
-  #     pkgs.fetchFromGitHub {
-  #       owner = "dracula";
-  #       repo = "xresources";
-  #       rev = "ca0d05cf2b7e5c37104c6ad1a3f5378b72c705db";
-  #       sha256 = "0lxv37gmh38y9d3l8nbnsm1mskcv10g3i83j0kac0a2qmypv1k9f";
-  #     } + "/Xresources.dark"
-  #   );
-  # };
-
   xsession.pointerCursor = {
     package = pkgs.vanilla-dmz;
     name = "Vanilla-DMZ";
@@ -39,6 +17,7 @@ with import <nixpkgs> {};
     shellAliases = {
       "dot" = "git --git-dir=$HOME/.files/ --work-tree=$HOME";
     };
+    # TODO: move to dotfiles?
     shellInit =
       ''
       if status is-interactive
@@ -64,7 +43,12 @@ with import <nixpkgs> {};
   programs.chromium = {
     enable = true;
     extensions = [
-      "hdokiejnpimakedhajhdlcegeplioahd" # lastpass
+      "haafibkemckmbknhfkiiniobjpgkebko" # Panda 5
+      "chklaanhfefbnpoihckbnefhakgolnmc" # JSON View
+      "chphlpgkkbolifaimnlloiipkdnihall" # OneTab
+      "hdokiejnpimakedhajhdlcegeplioahd" # LastPass
+      "naepdomgkenhinolocfifgehidddafch" # BrowserPass
+      "mpbpobfflnpcgagjijhmgnchggcjblin" # HTTP/2 and SPDY indicator
     ];
   };
 
@@ -80,7 +64,7 @@ with import <nixpkgs> {};
   # https://nixos.org/nixos/nix-pills/basic-dependencies-and-hooks.html
   #
 
-  services.key-manager.enable = true;
+  services.key-manager.enable = false;
   services.key-manager.github = {
     username = "drojas";
     ssh = {
@@ -127,12 +111,48 @@ with import <nixpkgs> {};
     packages = [
       pkgs.neofetch
       pkgs.lastpass-cli
+      pkgs.gopass
     ];
+  };
+
+  programs.gpg = {
+    enable = true;
   };
 
   services.gpg-agent = {
     enable = true;
     defaultCacheTtl = 1800;
     enableSshSupport = true;
+    extraConfig = ''
+      allow-emacs-pinentry
+      allow-loopback-pinentry
+    '';
   };
+  programs.browserpass.enable = true;
+  programs.browserpass.browsers = [
+    "chromium"
+    "firefox"
+  ];
+
+  # https://wiki.archlinux.org/index.php/HiDPI#X_Resources
+  # xresources = {
+  #   properties = {
+  #     "Xcursor.size" = 128;
+  #     "Xft.dpi" = 259; # 276
+  #     "Xft.autohint" = 0;
+  #     "Xft.lcdfilter" = "lcddefault";
+  #     "Xft.hintstyle" = "hintfull";
+  #     "Xft.hinting" = 1;
+  #     "Xft.antialias" = 1;
+  #     "Xft.rgba" = "rgb";
+  #   };
+  #   extraConfig = builtins.readFile(
+  #     pkgs.fetchFromGitHub {
+  #       owner = "dracula";
+  #       repo = "xresources";
+  #       rev = "ca0d05cf2b7e5c37104c6ad1a3f5378b72c705db";
+  #       sha256 = "0lxv37gmh38y9d3l8nbnsm1mskcv10g3i83j0kac0a2qmypv1k9f";
+  #     } + "/Xresources.dark"
+  #   );
+  # };
 }

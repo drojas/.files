@@ -18,10 +18,10 @@
   #   # QT_AUTO_SCREEN_SCALE_FACTOR = "1";
   # };
 
+  # TODO: evaluate moving these to all-packages
   environment.systemPackages = with pkgs; [
     xorg.xbacklight
-    wireguard
-    kitty
+    # kitty
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -108,4 +108,5 @@
   # should.
 
   system.stateVersion = "18.09"; # Did you read the comment?
+  system.autoUpgrade.enable = true;
 }
