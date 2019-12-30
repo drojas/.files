@@ -16,6 +16,8 @@ with import <nixpkgs> {};
     enable = true;
     shellAliases = {
       "dot" = "git --git-dir=$HOME/.files/ --work-tree=$HOME";
+      "pbcopy" = "xclip -selection clipboard";
+      "pbpaste" = "xclip -selection clipboard -o";
     };
     # TODO: move to dotfiles?
     shellInit =
@@ -113,6 +115,7 @@ with import <nixpkgs> {};
       lastpass-cli
       # gnupg # TODO: figure which is better choice between this and programs.gpg
       pass
+      xclip
     ];
   };
 
