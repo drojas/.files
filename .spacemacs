@@ -176,7 +176,9 @@ It should only modify the values of Spacemacs settings."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    dotspacemacs-startup-lists '((recents . 5)
-                                (projects . 7))
+                                (projects . 7)
+                                (agenda . 5)
+                                (todos . 7))
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
@@ -460,6 +462,8 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  ;; TODO: should this call happen after epa-pinentry-mode is set?
+  ;; (pinentry-start)
   )
 
 (defun dotspacemacs/user-load ()
@@ -475,6 +479,7 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  ;; (setq epa-pinentry-mode 'loopback)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

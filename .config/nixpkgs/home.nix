@@ -108,10 +108,11 @@ with import <nixpkgs> {};
         recursive = true;
       };
     };
-    packages = [
-      pkgs.neofetch
-      pkgs.lastpass-cli
-      pkgs.gopass
+    packages = with pkgs; [
+      neofetch
+      lastpass-cli
+      # gnupg # TODO: figure which is better choice between this and programs.gpg
+      pass
     ];
   };
 
@@ -123,10 +124,11 @@ with import <nixpkgs> {};
     enable = true;
     defaultCacheTtl = 1800;
     enableSshSupport = true;
-    extraConfig = ''
-      allow-emacs-pinentry
-      allow-loopback-pinentry
-    '';
+    # extraConfig = ''
+    #   allow-emacs-pinentry
+    #   allow-loopback-pinentry
+    #   pinentry-program ${pkgs.pinentry}/bin/pinentry-gtk-2
+    # '';
   };
   programs.browserpass.enable = true;
   programs.browserpass.browsers = [
