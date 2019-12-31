@@ -7,9 +7,9 @@
 
   networking = {
     networkmanager.enable = true;
-    firewall.enable = true;
-    firewall.allowedTCPPorts = [ 139 445 51820 ];
-    firewall.allowedUDPPorts = [ 137 138 ];
+    # firewall.enable = true;
+    # firewall.allowedTCPPorts = [ 139 445 51820 ];
+    # firewall.allowedUDPPorts = [ 137 138 ];
     #firewall.allowedUDPPorts = [ 137 138 config.networking.wireguard.interfaces.wg0.listenPort ];
     hosts = {
       # "172.31.98.1" = [ "aruba.odyssys.net" ];
@@ -37,7 +37,7 @@
     timesyncd.enable = true;
     xserver = {
       enable = true;
-      xkbOptions = "ctrl:nocaps";
+      # xkbOptions = "ctrl:nocaps";
     };
   };
 

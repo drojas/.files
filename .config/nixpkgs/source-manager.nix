@@ -61,8 +61,6 @@ in {
     };
   };
 
-  # todo: install hook to keep hashes updated
-
   config = {
     # source - http://news.ycombinator.com/item?id=11070797
     # TODO: use environment variables instead of flags

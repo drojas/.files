@@ -53,7 +53,8 @@
   services.compton.backend = "xrender";
 
   services.xserver = {
-    layout = "us";
+    layout = "us,es";
+    xkbOptions = "grp:alt_shift_toggle, ctrl:swapcaps";
 
     # displayManager.sddm.enable = true;
     # desktopManager.plasma5.enable = true;
