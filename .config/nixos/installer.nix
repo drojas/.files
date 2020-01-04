@@ -4,7 +4,11 @@
     <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     <nixpkgs/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix>
     <nixpkgs/nixos/modules/installer/cd-dvd/channel.nix>
+    ./all-packages.nix
   ];
+
+  networking.wireless.enable = false;
+  networking.networkmanager.enable = true;
 
   # configure proprietary drivers
   nixpkgs.config.allowUnfree = true;
