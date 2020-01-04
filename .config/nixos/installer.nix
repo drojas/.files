@@ -28,6 +28,7 @@
     fish
     git
     gnupg
+    vim
   ];
 
   nix.maxJobs = lib.mkDefault 8;
