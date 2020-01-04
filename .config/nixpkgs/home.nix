@@ -114,7 +114,7 @@ with import <nixpkgs> {};
       neofetch
       lastpass-cli
       # gnupg # TODO: figure which is better choice between this and programs.gpg
-      pass
+      gopass
       xclip
     ];
   };
