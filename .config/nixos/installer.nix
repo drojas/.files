@@ -1,14 +1,28 @@
 {config, pkgs, lib, ...}:
+
+with import <nixpkgs> {};
+
+let
+  dotSrc = fetchFromGitHub {
+    owner = "drojas";
+    repo = "dot";
+    rev = "63a7599359371906f182620688e10e24291e4612";
+    sha256 = "1sgbslzd7xlr076lsddc8ds085xlhg949qvz6br6wnrx4xf05qrb";
+    fetchSubmodules = true;
+  };
+in
 {
   imports = [
     <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     <nixpkgs/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix>
     <nixpkgs/nixos/modules/installer/cd-dvd/channel.nix>
     ./all-packages.nix
+    "${dotSrc}/nixpkgs/nixos/modules/programs/dot.nix"
   ];
 
   networking.wireless.enable = false;
   networking.networkmanager.enable = true;
+  programs.dot.enable = true;
 
   # configure proprietary drivers
   nixpkgs.config.allowUnfree = true;

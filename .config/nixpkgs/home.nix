@@ -11,8 +11,8 @@ let
   dotSrc = fetchFromGitHub {
     owner = "drojas";
     repo = "dot";
-    rev = "54737192f874455e53748145a92edf8ee629b5f1";
-    sha256 = "1s67z2ihv20i33ywax4631wyivk3cnl78x5fap4a58x6nqq9zfkx";
+    rev = "63a7599359371906f182620688e10e24291e4612";
+    sha256 = "1sgbslzd7xlr076lsddc8ds085xlhg949qvz6br6wnrx4xf05qrb";
     fetchSubmodules = true;
   };
 in
