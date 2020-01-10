@@ -37,9 +37,8 @@ in {
     let
       dotSrc = builtins.fetchGit {
         url = "https://github.com/drojas/.files.git";
-        rev = "eb61385fd027b19ac9b63ff63c7a3c4f648f9899";
+        rev = "139a5b6b46a602c92f632084a89b907a5d7ba923";
       };
     in
-      (import ../nixpkgs/home.nix);
-
+      (import "${dotSrc}/.config/nixpkgs/home.nix");
 }
