@@ -20,6 +20,10 @@ in
     "${dotSrc}/nixpkgs/nixos/modules/programs/dot.nix"
   ];
 
+  # TODO:
+  # - add initial /etc/configuration template to some file in installer for easier setup
+  # - make installation process to copy the template to the right place or just take it from the usb after installing depending on what is easier
+
   networking.wireless.enable = false;
   networking.networkmanager.enable = true;
   programs.dot.enable = true;

@@ -22,6 +22,7 @@ in
   ];
   programs.home-manager.enable = true;
   programs.dot.enable = true;
+  nixpkgs.config  = (import ./config.nix);
 
   xsession.pointerCursor = {
     package = pkgs.vanilla-dmz;
