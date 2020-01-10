@@ -74,6 +74,16 @@ in
     enable = true;
     userName = "David Rojas Camaggi";
     userEmail = "drojascamaggi@gmail.com";
+    extraConfig = {
+      url = {
+        "git@github.com:drojas/" = {
+          insteadOf = "drojas:";
+        };
+        "git@github.com:drojas/morphic.git" = {
+          insteadOf = "morphic:";
+        };
+      };
+    };
   };
 
   #
@@ -116,7 +126,7 @@ in
         );
       projects = config.lib.dag.entryAfter [ "githubKeys" ] ''
         dot init git@github.com:drojas/.files.git
-        git clone git@github.com:drojas/morphic.git ~/Code/morphic 2>/dev/null || true
+        git clone morphic: ~/Code/morphic 2>/dev/null || true
       '';
     };
 
