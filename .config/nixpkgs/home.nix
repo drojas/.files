@@ -1,10 +1,27 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 with import <nixpkgs> {};
 
+let
+  dotSrc = fetchFromGitHub {
+    owner = "drojas";
+    repo = "dot";
+    rev = "54737192f874455e53748145a92edf8ee629b5f1";
+    sha256 = "1s67z2ihv20i33ywax4631wyivk3cnl78x5fap4a58x6nqq9zfkx";
+    fetchSubmodules = true;
+  };
+in
 {
-  imports = [ ./key-manager.nix ./source-manager.nix ];
+  imports = [
+    "${dotSrc}/home-manager/modules/programs/dot.nix"
+  ];
   programs.home-manager.enable = true;
+  programs.dot.enable = true;
 
   xsession.pointerCursor = {
     package = pkgs.vanilla-dmz;
@@ -15,7 +32,6 @@ with import <nixpkgs> {};
   programs.fish = {
     enable = true;
     shellAliases = {
-      "dot" = "git --git-dir=$HOME/.files/ --work-tree=$HOME";
       "pbcopy" = "xclip -selection clipboard";
       "pbpaste" = "xclip -selection clipboard -o";
     };
@@ -66,32 +82,6 @@ with import <nixpkgs> {};
   # https://nixos.org/nixos/nix-pills/basic-dependencies-and-hooks.html
   #
 
-  services.key-manager.enable = false;
-  services.key-manager.github = {
-    username = "drojas";
-    ssh = {
-      matebook = "$HOME/.ssh/id_rsa.pub";
-    };
-  };
-
-  services.source-manager.enable = true;
-  services.source-manager.git = {
-    dotfiles = {
-      remote = "git@github.com:drojas/.files.git";
-      workTree = "$HOME";
-      gitDir = ".files/";
-      cloneFlags = "--bare";
-      extraConfig = ''
-          status.showUntrackedFiles no
-        '';
-      as = "dot";
-    };
-    morphic = {
-      remote = "git@github.com:drojas/morphic.git";
-      workTree = "$HOME/Code/morphic";
-    };
-  };
-
   home = {
     sessionVariables = {
       VISUAL = "emacsclient";
@@ -110,6 +100,26 @@ with import <nixpkgs> {};
         recursive = true;
       };
     };
+
+    activation = {
+      githubKeys =
+        let
+          username = "drojas";
+          sshKeyPath = "~/.ssh/id_rsa";
+        in (
+          config.lib.dag.entryAfter [ "installPackages" ] ''
+      #       export githubuser=${username}
+      # #       echo "Using username $githubuser"
+      #       read -s -p "Enter github password for user $githubuser: " githubpass
+      #       $DRY_RUN_CMD curl -u "$githubuser:$githubpass" -d "{\"title\":\"`hostname`\",\"key\":\"$(cat ${sshKeyPath}.pub)\"}" https://api.github.com/user/keys
+          ''
+        );
+      projects = config.lib.dag.entryAfter [ "githubKeys" ] ''
+        dot init git@github.com:drojas/.files.git
+        git clone git@github.com:drojas/morphic.git ~/Code/morphic 2>/dev/null || true
+      '';
+    };
+
     packages = with pkgs; [
       neofetch
       lastpass-cli
