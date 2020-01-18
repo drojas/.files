@@ -1,0 +1,3 @@
+[submodule "/home/david/.emacs.d"]
+	path = /home/david/.emacs.d
+	url = git@github.com:syl20bnr/spacemacs.git
