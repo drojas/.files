@@ -145,7 +145,7 @@ in {
             BoldIntense=false
             ColorScheme=Dracula
             LineSpacing=0
-            Font=Source Code Pro for Powerline,10,-1,5,57,0,0,0,0,0
+            Font=Source Code Pro for Powerline,10
             UseFontLineChararacters=true
 
             [General]
