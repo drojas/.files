@@ -6,12 +6,17 @@ in {
   imports = [
     (builtins.fetchTarball {
       url = "https://github.com/rycee/home-manager/archive/release-19.09.tar.gz";
-      sha256 = "1d3391by9r4vfbq1qisj7lbsacxrh8p6lpqhwccsmj3pfzkmvssc";
+      sha256 = "0xqzz4pb084wsnglq8z6dhbz3c8l3v44bz0bzf51yqrs6g33ky8k";
     } + "/nixos/default.nix")
   ];
-  # TODO: use emacs settings for multi-term instead?
-  # users.defaultUserShell = pkgs.zsh;
-  users.extraUsers.david = {
+  # home-manager.useUserPackages = true;
+  security.sudo.wheelNeedsPassword = false;
+  # environment.variables.KUBECONFIG = "/etc/kubernetes/cluster-admin.kubeconfig";
+  security.sudo.extraConfig = ''
+    Defaults:%kubernetes env_keep+=KUBECONFIG
+  '';
+  users.extraUsers."${username}" = {
+    # TODO: use emacs settings for multi-term instead?
     shell = pkgs.fish;
     uid = 1000;
     isNormalUser = true;
@@ -21,24 +26,21 @@ in {
       "wheel" "disk" "audio" "video"
       "network-manager" "systemd-journal"
       "docker"
+      "kubernetes"
     ];
     createHome = true;
     home = "/home/${username}";
     # useDefaultShell = true;
     openssh.authorizedKeys.keys = [
     ];
+    packages = with pkgs; [
+      # nodejs-12_x
+      # nodePackages.lerna
+    ];
   };
 
-  users.extraGroups.david = {
+  users.extraGroups.${username} = {
     gid = 1000;
   };
-  home-manager.useUserPackages = true;
-  home-manager.users.david =
-    let
-      dotSrc = builtins.fetchGit {
-        url = "https://github.com/drojas/.files.git";
-        rev = "139a5b6b46a602c92f632084a89b907a5d7ba923";
-      };
-    in
-      (import "${dotSrc}/.config/nixpkgs/home.nix");
+  home-manager.users."${username}" = (import ../nixpkgs/home.nix);
 }

@@ -15,14 +15,28 @@ let
     sha256 = "1sgbslzd7xlr076lsddc8ds085xlhg949qvz6br6wnrx4xf05qrb";
     fetchSubmodules = true;
   };
-in
-{
+in {
   imports = [
     "${dotSrc}/home-manager/modules/programs/dot.nix"
   ];
+  nixpkgs.overlays = [
+    (import (builtins.fetchTarball {
+      url = https://github.com/nix-community/emacs-overlay/archive/master.tar.gz;
+    }))
+  ];
+  nixpkgs.config  = (import ./config.nix);
+
   programs.home-manager.enable = true;
   programs.dot.enable = true;
-  nixpkgs.config  = (import ./config.nix);
+
+  services.random-background = {
+    enable = true;
+    # display = "center";
+    # imageDirectory = "${(builtins.fetchTarball {
+    #   url = http://github.com/NixOS/nixos-artwork/archive/master.tar.gz;
+    # })}/wallpapers";
+    imageDirectory = "%h/backgrounds";
+  };
 
   xsession.pointerCursor = {
     package = pkgs.vanilla-dmz;
@@ -35,12 +49,19 @@ in
     shellAliases = {
       "pbcopy" = "xclip -selection clipboard";
       "pbpaste" = "xclip -selection clipboard -o";
+      # "k" = "sudo kubectl";
+      # "h" = "sudo helm";
     };
     # TODO: move to dotfiles?
     shellInit =
       ''
       if status is-interactive
-          neofetch
+          ${neofetch}/bin/neofetch | ${lolcat}/bin/lolcat
+          ${fortune}/bin/fortune \
+            | ${cowsay}/bin/cowsay \
+            | ${lolcat}/bin/lolcat
+          # sudo kubectl cluster-info | ${lolcat}/bin/lolcat
+          dot status --porcelain | ${lolcat}/bin/lolcat
       end
 
       # emacs ansi-term support
@@ -57,6 +78,7 @@ in
 
   programs.emacs = {
     enable = true;
+    package = with pkgs; emacsGit;
   };
 
   programs.chromium = {
@@ -83,6 +105,9 @@ in
         "git@github.com:drojas/morphic.git" = {
           insteadOf = "morphic:";
         };
+        "git@github.com:" = {
+          insteadOf = "gh:";
+        };
       };
     };
   };
@@ -101,18 +126,143 @@ in
     };
 
     file = {
-      ".emacs.d" = {
-        source = fetchFromGitHub {
-          owner = "syl20bnr";
-          repo = "spacemacs";
-          rev = "3f559a4233815c6129f9ad593d5dee9fff199a1c";
-          sha256 = "1p356dg5kql5jjmd01q63bw02cdr42wibcyrqls1nhl0d39d50v8";
-        };
-        recursive = true;
+      ".config/konsolerc" = {
+        text = ''
+            [Desktop Entry]
+            DefaultProfile=David.profile
+
+            [KonsoleWindow]
+            ShowMenuBarByDefault=false
+            showTerminalSizeHintItem=false
+          '';
       };
+
+      ".local/share/konsole/David.profile" = {
+        # Font=Source Code Pro for Powerline,10,-1,5,57,0,0,0,0,0
+        text = ''
+            [Appearance]
+            AntiAliasFonts=true
+            BoldIntense=false
+            ColorScheme=Dracula
+            LineSpacing=0
+            Font=Source Code Pro for Powerline,10,-1,5,57,0,0,0,0,0
+            UseFontLineChararacters=true
+
+            [General]
+            Environment=TERM=xterm-256color
+            Name=David
+            Parent=FALLBACK/
+
+            [Scrolling]
+            ScrollBarPosition=2
+        '';
+      };
+
+      ".local/share/konsole/Dracula.colorscheme" = {
+        text = ''
+            [Background]
+            Color=40,42,54
+
+            [BackgroundFaint]
+            Color=40,42,54
+
+            [BackgroundIntense]
+            Color=40,42,54
+
+            [Color0]
+            Color=40,42,54
+
+            [Color0Faint]
+            Color=40,42,54
+
+            [Color0Intense]
+            Color=40,42,54
+
+            [Color1]
+            Color=255,85,85
+
+            [Color1Faint]
+            Color=255,85,85
+
+            [Color1Intense]
+            Color=255,85,85
+
+            [Color2]
+            Color=80,250,123
+
+            [Color2Faint]
+            Color=80,250,123
+
+            [Color2Intense]
+            Color=80,250,123
+
+            [Color3]
+            Color=241,250,140
+
+            [Color3Faint]
+            Color=241,250,140
+
+            [Color3Intense]
+            Color=241,250,140
+
+            [Color4]
+            Color=98,114,164
+
+            [Color4Faint]
+            Color=98,114,164
+
+            [Color4Intense]
+            Color=98,114,164
+
+            [Color5]
+            Color=255,121,198
+
+            [Color5Faint]
+            Color=255,121,198
+
+            [Color5Intense]
+            Color=255,121,198
+
+            [Color6]
+            Color=139,233,253
+
+            [Color6Faint]
+            Color=139,233,253
+
+            [Color6Intense]
+            Color=139,233,253
+
+            [Color7]
+            Color=248,248,242
+
+            [Color7Faint]
+            Color=248,248,242
+
+            [Color7Intense]
+            Color=248,248,242
+
+            [Foreground]
+            Color=248,248,242
+
+            [ForegroundFaint]
+            Color=248,248,242
+
+            [ForegroundIntense]
+            Color=248,248,242
+
+            [General]
+            Blur=false
+            Description=Dracula
+            Opacity=0
+            Wallpaper=
+        '';
+        };
     };
 
     activation = {
+      spacemacs = config.lib.dag.entryAfter [ "installPackages" ] ''
+        git clone gh:syl20bnr/spacemacs ~/.emacs.d 2>.dev.null || true
+      '';
       githubKeys =
         let
           username = "drojas";
@@ -129,14 +279,15 @@ in
         dot init git@github.com:drojas/.files.git
         git clone morphic: ~/Code/morphic 2>/dev/null || true
       '';
+
     };
 
     packages = with pkgs; [
-      neofetch
       lastpass-cli
       # gnupg # TODO: figure which is better choice between this and programs.gpg
       gopass
       xclip
+      i3lock
     ];
   };
 
@@ -154,31 +305,31 @@ in
     #   pinentry-program ${pkgs.pinentry}/bin/pinentry-gtk-2
     # '';
   };
-  programs.browserpass.enable = true;
+  # programs.browserpass.enable = true;
   programs.browserpass.browsers = [
     "chromium"
     "firefox"
   ];
 
   # https://wiki.archlinux.org/index.php/HiDPI#X_Resources
-  # xresources = {
-  #   properties = {
-  #     "Xcursor.size" = 128;
-  #     "Xft.dpi" = 259; # 276
-  #     "Xft.autohint" = 0;
-  #     "Xft.lcdfilter" = "lcddefault";
-  #     "Xft.hintstyle" = "hintfull";
-  #     "Xft.hinting" = 1;
-  #     "Xft.antialias" = 1;
-  #     "Xft.rgba" = "rgb";
-  #   };
-  #   extraConfig = builtins.readFile(
-  #     pkgs.fetchFromGitHub {
-  #       owner = "dracula";
-  #       repo = "xresources";
-  #       rev = "ca0d05cf2b7e5c37104c6ad1a3f5378b72c705db";
-  #       sha256 = "0lxv37gmh38y9d3l8nbnsm1mskcv10g3i83j0kac0a2qmypv1k9f";
-  #     } + "/Xresources.dark"
-  #   );
-  # };
+  xresources = {
+    properties = {
+      "Xcursor.size" = 128;
+      "Xft.dpi" = 170; # 259; # 276
+      "Xft.autohint" = 0;
+      "Xft.lcdfilter" = "lcddefault";
+      "Xft.hintstyle" = "hintfull";
+      "Xft.hinting" = 1;
+      "Xft.antialias" = 1;
+      "Xft.rgba" = "rgb";
+    };
+    extraConfig = builtins.readFile(
+      pkgs.fetchFromGitHub {
+        owner = "dracula";
+        repo = "xresources";
+        rev = "ca0d05cf2b7e5c37104c6ad1a3f5378b72c705db";
+        sha256 = "0ywkf2bzxkr45a0nmrmb2j3pp7igx6qvq6ar0kk7d5wigmkr9m5n";
+      } + "/Xresources"
+    );
+  };
 }
