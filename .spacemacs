@@ -30,7 +30,9 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(typescript
+   '(markdown
+     html
+     typescript
      yaml
      javascript
      (exwm :variables
@@ -40,7 +42,7 @@ values."
            exwm-install-logind-lock-handler t
            exwm-terminal-command "konsole"
            ;; exwm-custom-init (lambda() (exwm/autostart-process "Dunst" "dunst"))
-     )
+           )
      themes-megapack
      nixos
      ;; ----------------------------------------------------------------
@@ -53,6 +55,7 @@ values."
      ;; better-defaults
      emacs-lisp
      git
+     docker
      ;; markdown
      org
      ;; (shell :variables
@@ -348,6 +351,41 @@ you should place your code here."
   (add-hook 'after-make-frame-functions 'spacemacs/enable-transparency)
   (set-face-attribute 'mode-line nil :box nil)
   (set-face-attribute 'mode-line-inactive nil :box nil)
+
+  (require 'exwm-randr)
+  (setq exwm-randr-workspace-output-plist
+        '(0 "eDP1" 1 "DP2"))
+  (add-hook 'exwm-randr-screen-change-hook
+            (lambda ()
+              (start-process-shell-command
+               "xrandr" nil "xrandr --output eDP1 --output DP2 --above eDP1 --auto")))
+  (require 'exwm-systemtray)
+  (exwm-systemtray-enable)
+  (exwm-randr-enable)
+
+  (defun generate-randr-config (primary secondary)
+    (-flatten `(,(-map (lambda (n) (list n primary)) (number-sequence 1 7))
+                (0 secondary)
+                ,(-map (lambda (n) (list n secondary)) (number-sequence 8 9)))))
+
+  (defun randr-layout-dp1-extend ()
+    "Layout for connecting my X1 Carbon to my screen at home."
+
+    (interactive)
+    (setq exwm-randr-workspace-monitor-plist (generate-randr-config "DP2" "eDP1"))
+    (shell-command "xrandr --output DP2 --above eDP1 --auto")
+    (shell-command "xrandr --output eDP1 --above eDP1 --auto --primary")
+    (exwm-randr-refresh)
+    )
+
+  (defun randr-layout-single ()
+    "Laptop screen only!"
+
+    (interactive)
+    (shell-command "xrandr --output eDP1 --auto --primary")
+    (shell-command "xrandr --output DP2 --off")
+    (exwm-randr-refresh)
+    )
   )
 
 (defun dotspacemacs/user-load ()
@@ -378,18 +416,24 @@ in the dump."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(evil-want-Y-yank-to-eol nil)
- '(package-selected-packages
-   '(web-mode tide typescript-mode import-js grizzl emmet-mode add-node-modules-path orgit org-projectile org-category-capture org-pomodoro alert log4e magit-gitflow magit-popup livid-mode skewer-mode json-mode js2-refactor multiple-cursors helm-gitignore gruvbox-theme git-timemachine git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ flycheck-pos-tip pos-tip flycheck evil-magit magit git-commit with-editor darktooth-theme company-tern tern zenburn-theme zen-and-art-theme yaml-mode white-sand-theme web-beautify underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme systemd sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle seti-theme reverse-theme rebecca-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme org-present gntp org-mime org-download omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme simple-httpd light-soap-theme json-snatcher json-reformat js2-mode js-doc jbeans-theme jazz-theme ir-black-theme inkpot-theme htmlize heroku-theme hemisu-theme helm-company helm-c-yasnippet hc-zenburn-theme gruber-darker-theme grandshell-theme gotham-theme gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-messenger git-link git-gutter gandalf-theme fuzzy flatui-theme flatland-theme farmhouse-theme exotica-theme transient espresso-theme dracula-theme django-theme diff-hl autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme dash-functional doom-dracula-theme nix-mode helm-nixos-options nixos-options exwm xelb ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:background nil)))))
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(evil-want-Y-yank-to-eol nil)
+   '(package-selected-packages
+     '(dockerfile-mode orgit org-projectile org-category-capture org-pomodoro alert log4e magit-gitflow magit-popup livid-mode skewer-mode json-mode js2-refactor multiple-cursors helm-gitignore gruvbox-theme git-timemachine git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ flycheck-pos-tip pos-tip flycheck evil-magit magit git-commit with-editor darktooth-theme company-tern tern zenburn-theme zen-and-art-theme yaml-mode white-sand-theme web-beautify underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme systemd sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle seti-theme reverse-theme rebecca-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme org-present gntp org-mime org-download omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme simple-httpd light-soap-theme json-snatcher json-reformat js2-mode js-doc jbeans-theme jazz-theme ir-black-theme inkpot-theme htmlize heroku-theme hemisu-theme helm-company helm-c-yasnippet hc-zenburn-theme gruber-darker-theme grandshell-theme gotham-theme gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-messenger git-link git-gutter gandalf-theme fuzzy flatui-theme flatland-theme farmhouse-theme exotica-theme transient espresso-theme dracula-theme django-theme diff-hl autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme dash-functional doom-dracula-theme nix-mode helm-nixos-options nixos-options exwm xelb ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))
+   '(safe-local-variable-values
+     '((org-html-postamble . "Keywords: Frameless, Platform as a Service, Modularity.<a href='#'>Frameless</a>")
+       (typescript-backend . tide)
+       (typescript-backend . lsp)
+       (javascript-backend . tern)
+       (javascript-backend . lsp))))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(default ((t (:background nil)))))
+  )

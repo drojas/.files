@@ -36,6 +36,7 @@ in {
     #   url = http://github.com/NixOS/nixos-artwork/archive/master.tar.gz;
     # })}/wallpapers";
     imageDirectory = "%h/backgrounds";
+    interval = "1m";
   };
 
   xsession.pointerCursor = {
@@ -43,6 +44,30 @@ in {
     name = "Vanilla-DMZ";
     size = 64;
   };
+
+  # TODO: add services at init
+  # programs.treehouse.enable = true;
+  # programs.treehouse.servers."api.example.com" = {
+  #   "GET /hello/:name" = let
+  #     src = writeScript "greeter" ''
+  #       #!/usr/bin/env bash
+
+  #       echo "Hello $1!"
+  #     '';
+  #   in callPackage (builtins.mkDerivation {
+  #     pname = "greeter";
+  #     version = "0.0.0";
+  #     phases = "installPhase fixupPhase";
+  #     installPhase = ''
+  #       mkdir -p $out/bin
+  #       cp ${src} $out/.wrapped
+  #       chmod +x $out/.wrapped
+  #       makeWrapper $out/.wrapped $out/bin/dot --prefix PATH : ${ gitPath }
+  #     '';
+  #     src = src;
+  #     nativeBuildInputs = [ makeWrapper ];
+  #   }) {};
+  # };
 
   programs.fish = {
     enable = true;

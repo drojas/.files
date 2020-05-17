@@ -20,9 +20,9 @@ in {
   # TODO: evaluate moving these to all-packages
   environment.systemPackages = with pkgs; [
     xorg.xbacklight
-    # kubectl
     emacsGit
-    latte-dock
+    udftools
+    steam
   ];
 
   virtualisation.docker.enable = true;
@@ -37,7 +37,10 @@ in {
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.supportedFilesystems = [ "ext4" ];
+  boot.supportedFilesystems = [
+    "ext4"
+    "ntfs"
+  ];
 
   fonts.fontconfig.dpi = 170;
   i18n.consoleFont = "ter-i32b";
@@ -53,12 +56,11 @@ in {
     [General]
     Enable=Source,Sink,Media,Socket
   ";
-  hardware.bumblebee.enable = true;
   services.upower.enable = true;
   services.logind.lidSwitch = "suspend";
 
   services.compton.enable = true;
-  services.compton.backend = "glx";
+  services.compton.backend = "xrender";
 
   services.xserver = {
     layout = "us,es";
@@ -69,7 +71,10 @@ in {
     desktopManager.default = "plasma5";
     desktopManager.xterm.enable = false;
 
-    videoDrivers = [ "intel" ];
+    videoDrivers = [
+      "intel"
+      # "nvidia"
+    ];
     dpi = 170; # 170, 227, 259, 276
 
     xkbOptions = "grp:alt_shift_toggle, ctrl:swapcaps";
@@ -88,6 +93,12 @@ in {
     # displayManager.auto.enable = true;
     # displayManager.auto.user = "david";
   };
+
+  hardware.bumblebee.enable = false;
+
+  hardware.nvidia.optimus_prime.enable = false;
+  # hardware.nvidia.optimus_prime.nvidiaBusId = "PCI:1:0:0";
+  # hardware.nvidia.optimus_prime.intelBusId = "PCI:0:2:0";
 
   system.stateVersion = "19.09";
   system.autoUpgrade.enable = true;

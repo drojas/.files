@@ -44,7 +44,6 @@
   fonts = {
     enableFontDir = true;
     enableGhostscriptFonts = true;
-    fontconfig.ultimate.enable = true;
     fonts = with pkgs; [
       corefonts
       inconsolata
